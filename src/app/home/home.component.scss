@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  flex-direction: row;
+}
+
+.sidebar {
+  height: 100%;
+  overflow: scroll;
+}
+
+.mat-card {
+  margin: 1em;
+}
