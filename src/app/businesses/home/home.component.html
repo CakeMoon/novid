@@ -1,0 +1,15 @@
+<section class="sidebar">
+  <mat-card *ngFor="let business of businessList$ | async"  [class.selected]="business.bid === selectedId">
+    <mat-card-title>
+      <a [routerLink]="[business.bid, 'detail']">
+        {{ business.name }}
+      </a>
+    </mat-card-title>
+    <mat-card-subtitle>{{ business.address }}</mat-card-subtitle>
+    <mat-card-content>
+      {{ business.rating }}
+    </mat-card-content>
+  </mat-card>
+</section>
+
+<router-outlet></router-outlet>

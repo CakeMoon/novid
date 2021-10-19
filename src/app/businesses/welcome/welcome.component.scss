@@ -1,0 +1,39 @@
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 7%;
+  margin-left: 5%;
+  padding-right: 20%;
+}
+
+.welcome-container h1 {
+  font-size: 4em;
+  margin-bottom: 0.5em;
+}
+
+.welcome-container h2 {
+  font-size: 2em;
+}
+
+.metrics-container p{
+  font-weight: 500;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+figure {
+  text-align: center;
+  border: 1px solid #dfdfdf;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
-import { AppRoutingModule } from './app-routing.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
+import { HomeComponent } from './home/home.component';
+
+import { BusinessesRoutingModule } from './businesses-routing.module';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,28 +17,29 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-
-import { AppComponent } from './app.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
-import { SignInComponent } from './sign-in/sign-in.component';
 import { MatListModule } from '@angular/material/list';
 
-import { BusinessesModule } from './businesses/businesses.module';
-import { from } from 'rxjs';
+import { DetailComponent } from './detail/detail.component';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { EditComponent } from './edit/edit.component';
+import { OwnerComponent } from './owner/owner.component';
+import { ReviewComponent } from './review/review.component';
+import { ContentComponent } from './content/content.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent,
-    SignUpComponent,
-    SignInComponent,
+    HomeComponent,
+    DetailComponent,
+    WelcomeComponent,
+    EditComponent,
+    OwnerComponent,
+    ReviewComponent,
+    ContentComponent,
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
+    CommonModule,
+    BusinessesRoutingModule,
 
     MatToolbarModule,
     MatInputModule,
@@ -54,10 +54,6 @@ import { from } from 'rxjs';
     MatOptionModule,
     MatProgressSpinnerModule,
     MatListModule,
-    
-    BusinessesModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+  ]
 })
-export class AppModule { }
+export class BusinessesModule { }

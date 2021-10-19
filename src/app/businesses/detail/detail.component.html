@@ -1,0 +1,14 @@
+<h1>{{ business.name }}</h1>
+<h2>{{ business.address }}</h2>
+
+<div class="operations">
+  <div class="operations-item" *ngFor="let operation of business.operations">
+    <mat-icon *ngIf="operation.value === 0">clear</mat-icon>
+    <mat-icon *ngIf="operation.value === 1">done</mat-icon>
+    {{ operation.label }}
+  </div>
+</div>
+
+<button mat-flat-button color="primary" (click)="gotoReview()">Leave Review</button>
+<button mat-flat-button color="primary" (click)="gotoEdit()">Edit Business</button>
+<button mat-button (click)="gotoClaim()">Are you the owner of this business?</button>

@@ -1,11 +1,13 @@
+export interface Operation {
+  label: string,
+  value: 0 | 1,
+}
+
 export interface Business {
   bid: number,
   name: string,
   address: string,
-  delivery: 0 | 1,
-  takeout: 0 | 1,
-  outdoor: 0 | 1,
-  indoor: 0 | 1,
+  operations: Operation[],
   vcode: number,
   authcode: number,
   rating?: number,
