@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FormControl } from '@angular/forms';
 
 import { Business } from '../business';
 import { BusinessService } from '../business.service';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +15,7 @@ import { switchMap } from 'rxjs/operators';
 export class HomeComponent implements OnInit {
   businessList$!: Observable<Business[]>;
   selectedId = 0;
+  searchedName = new FormControl('');
 
   constructor(
     private businessService: BusinessService,
@@ -27,5 +29,17 @@ export class HomeComponent implements OnInit {
         return this.businessService.getBusinessList();
       })
     );
+    this.searchedName.valueChanges
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+    )
+    .subscribe(name => {
+      this.businessList$ = this.businessService.search(name);
+    })
+  }
+
+  search() {
+    this.businessList$ = this.businessService.search(this.searchedName.value);
   }
 }
