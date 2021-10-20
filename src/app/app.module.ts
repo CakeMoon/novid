@@ -18,21 +18,18 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-
-import { AppComponent } from './app.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
-import { SignInComponent } from './sign-in/sign-in.component';
 import { MatListModule } from '@angular/material/list';
 
+import { AppComponent } from './app.component';
+
+
 import { BusinessesModule } from './businesses/businesses.module';
-import { from } from 'rxjs';
+import { AuthModule } from './auth/auth.module';
+import { authInterceptorProviders } from './auth/auth.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignUpComponent,
-    SignInComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,8 +53,9 @@ import { from } from 'rxjs';
     MatListModule,
     
     BusinessesModule,
+    AuthModule,
   ],
-  providers: [],
+  providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

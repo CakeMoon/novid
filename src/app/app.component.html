@@ -1,9 +1,13 @@
 <mat-toolbar color="primary">
-  <span>My Application</span>
+  <img src="/assets/novid_1.png">
   <span class="spacer"></span>
-  <a mat-button routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a>
-  <a mat-button routerLink="/sign-in" routerLinkActive="active">Log In</a>
-  <a mat-button routerLink="/sign-up" routerLinkActive="active">Sign Up</a>
-  <a mat-button routerLink="/wishlist" routerLinkActive="active">Sign Out</a>
+  <div class="profile" *ngIf="isLoggedIn">
+    <mat-icon>person_pin</mat-icon>
+    <span class="profile-name">{{ username }}</span>
+  </div>
+  <a *ngIf="isLoggedIn" mat-button routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a>
+  <a *ngIf="!isLoggedIn" mat-button routerLink="/sign-in" routerLinkActive="active">Log In</a>
+  <a *ngIf="!isLoggedIn" mat-button routerLink="/sign-up" routerLinkActive="active">Sign Up</a>
+  <button *ngIf="isLoggedIn" mat-button (click)="signOut()">Sign Out</button>
 </mat-toolbar>
 <router-outlet></router-outlet>

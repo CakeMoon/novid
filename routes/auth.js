@@ -28,11 +28,10 @@ router.post('/',
     try {
         let user = await Users.findUser(req.body.username);
 
-        console.log(user);
         // must find user in the DB
         if (!user) {
             res.status(404).json({
-                error: `Could not find user ${req.body.username}`,
+                message: `Could not find user ${req.body.username}`,
                 accessToken: null,
             }).end();
             return;
@@ -43,11 +42,11 @@ router.post('/',
             user.password
         );
 
-        console.log(passwordIsValid);
         // authenticate and sign the user in
         if (!passwordIsValid) {
             res.status(401).json({
-                error: `Your username and password are incorrect.`
+                message: `Your username and password are incorrect.`,
+                accessToken: null,
             }).end();
             return;
         }
@@ -55,8 +54,6 @@ router.post('/',
         const token = jwt.sign({ id: user.uid }, config.secret, {
             expiresIn: 86400 // 24 hours
         });
-
-        console.log(token);
 
         res.status(201).json({
             data: user,
@@ -66,7 +63,8 @@ router.post('/',
 
     } catch (error) {
         res.status(503).json({
-            error: "Could not sign user in"
+            message: "Could not sign user in",
+            accessToken: null,
         }).end();
     }
     }

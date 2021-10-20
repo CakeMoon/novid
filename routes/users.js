@@ -61,13 +61,14 @@ router.post('/',
         const password = bcrypt.hashSync(req.body.password, 8);
 
         let user = await Users.addUser(username, password);
+        delete user.password;
         res.status(201).json({
             user,
             message: "Please sign in to continue."
         }).end();
     } catch (error) {
         res.status(400).json({
-            error: "The username already exists. Please enter a different username."
+            message: "The username already exists. Please enter a different username."
         }).end();
     }
     }
@@ -179,7 +180,6 @@ router.get('/:reviewId/scores',
     async (req, res) => {
     try {
         const rid = req.params.reviewId;
-        console.log(rid);
         let promptScores = await Reviews.getUserReviewScores(rid);
         res.status(200).json(promptScores).end();
     } catch (error) {
