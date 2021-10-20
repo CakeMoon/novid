@@ -1,11 +1,12 @@
 const express = require('express');
-
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const Users = require('../models/Users');
 const Favorites = require('../models/Favorites');
 const Reviews = require('../models/Reviews');
 const v = require('./validators');
-
+const middleware = require('./middleware');
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ const router = express.Router();
  * @throws {503} - if any error with getting all favorited businesses by user
  */
 router.get('/favorites',
-    [v.ensureUserSignedIn],
+    [middleware.verifyToken],
     async (req, res) => {
         try {
             const uid = req.session.uid;
@@ -57,7 +58,7 @@ router.post('/',
     async (req, res) => {
     try {
         const username = req.body.username;
-        const password = req.body.password;
+        const password = bcrypt.hashSync(req.body.password, 8);
 
         let user = await Users.addUser(username, password);
         res.status(201).json({

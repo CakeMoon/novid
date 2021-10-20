@@ -24,6 +24,7 @@ const filterBusinesses = (businesses) => {
  */
 router.get('/', [], async (req, res) => {
     try {
+        console.log(req);
         const allBusinesses = await Businesses.getAllBusinesses();
         filterBusinesses(allBusinesses);
         res.status(200).json(allBusinesses).end();

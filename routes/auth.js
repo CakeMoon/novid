@@ -1,5 +1,8 @@
 const express = require('express');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
+const config = require('./auth.config');
 const Users = require('../models/Users');
 const v = require('./validators');
 
@@ -25,26 +28,40 @@ router.post('/',
     try {
         let user = await Users.findUser(req.body.username);
 
+        console.log(user);
         // must find user in the DB
         if (!user) {
             res.status(404).json({
-                error: `Could not find user ${req.body.username}`
+                error: `Could not find user ${req.body.username}`,
+                accessToken: null,
             }).end();
             return;
         }
 
+        const passwordIsValid = bcrypt.compareSync(
+            req.body.password,
+            user.password
+        );
+
+        console.log(passwordIsValid);
         // authenticate and sign the user in
-        if (user.username !== req.body.username || user.password !== req.body.password) {
+        if (!passwordIsValid) {
             res.status(401).json({
                 error: `Your username and password are incorrect.`
             }).end();
             return;
         }
 
-        req.session.uid = user.uid;
+        const token = jwt.sign({ id: user.uid }, config.secret, {
+            expiresIn: 86400 // 24 hours
+        });
+
+        console.log(token);
+
         res.status(201).json({
             data: user,
-            message: "You are signed in."
+            message: "You are signed in.",
+            accessToken: token,
         }).end();
 
     } catch (error) {

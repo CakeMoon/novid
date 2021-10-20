@@ -1,5 +1,3 @@
-const express = require('express');
-
 //====================AUTH====================
 
 const ensureUserSignedIn = function(req, res, next) {
