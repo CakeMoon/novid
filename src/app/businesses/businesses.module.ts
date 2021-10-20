@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { HomeComponent } from './home/home.component';
 
@@ -18,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { DetailComponent } from './detail/detail.component';
 import { WelcomeComponent } from './welcome/welcome.component';
@@ -40,6 +42,7 @@ import { ContentComponent } from './content/content.component';
   imports: [
     CommonModule,
     BusinessesRoutingModule,
+    ReactiveFormsModule,
 
     MatToolbarModule,
     MatInputModule,
@@ -54,6 +57,7 @@ import { ContentComponent } from './content/content.component';
     MatOptionModule,
     MatProgressSpinnerModule,
     MatListModule,
+    MatCheckboxModule,
   ]
 })
 export class BusinessesModule { }
