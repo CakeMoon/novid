@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { Business } from '../business';
 import { BusinessService } from '../business.service';
 import { TokenStorageService } from '../../auth/token-storage.service';
+import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
@@ -16,24 +17,30 @@ export class HomeComponent implements OnInit {
   selectedId = 0;
   searchedName = new FormControl('');
   toggle = new FormControl('all');
+  subscription!: Subscription;
 
   constructor(
     private businessService: BusinessService,
-    private tokenStorageService: TokenStorageService,
   ) { }
 
   ngOnInit(): void {
-    this.businessService.businessList$.subscribe(newList => {
+    this.subscription = this.businessService.businessList$.subscribe(newList => {
       this.businessList = newList;
     })
 
     this.toggle.valueChanges
     .subscribe(toggle => {
       if (toggle === 'all') {
-        this.businessService.getBusinessList();
+        this.subscription.unsubscribe();
+        this.subscription = this.businessService.businessList$.subscribe(newList => {
+          this.businessList = newList;
+        })
       } 
       if (toggle === 'favorite') {
-        this.businessService.getFavoriteList();
+        this.subscription.unsubscribe();
+        this.subscription = this.businessService.favoriteList$.subscribe(newList => {
+          this.businessList = newList;
+        })
       }
       this.searchedName.setValue('', { emitEvent: false });
     })
@@ -44,14 +51,7 @@ export class HomeComponent implements OnInit {
       distinctUntilChanged(),
     )
     .subscribe(name => {
-      if (name.length === 0) {
-        if (this.toggle.value === 'all') {
-          this.businessService.getBusinessList();
-        }
-        if (this.toggle.value === 'favorite') {
-          this.businessService.getFavoriteList();
-        }
-      } else {
+      if (name.length !== 0) {
         if (this.toggle.value === 'all') {
           this.businessService.search(name);
         }
@@ -71,19 +71,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  addFavorite(bid: number) {
-
-  }
-
-  deleteFavorite(bid: number) {
-    
-  }
-
-  showFavorites() {
-
-  }
-
-  showAll() {
-
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

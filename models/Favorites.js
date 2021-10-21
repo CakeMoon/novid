@@ -1,4 +1,5 @@
 const db = require('../db/db_config');
+const Businesses = require('./Businesses');
 
 class Favorites {
 
@@ -20,9 +21,10 @@ class Favorites {
      * @return {Favorite} - added favorite 
      */
     static async addFavorite(uid, bid) {
+        console.log("?");
         return db.run(`INSERT INTO favorites(uid, bid) VALUES (${uid}, ${bid})`)
                 .then(() => {
-                    return Favorites.findFavorite(uid, bid); 
+                    return Businesses.getOneBusiness(bid); 
                 });
     }
 

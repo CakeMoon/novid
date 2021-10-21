@@ -11,19 +11,8 @@
     <mat-icon matSuffix (click)="search()">search</mat-icon>
   </mat-form-field>
 
-  <mat-card *ngFor="let business of businessList"  [class.selected]="business.bid === selectedId">
-    <mat-card-title>
-      <a [routerLink]="[business.bid, 'detail']">
-        {{ business.name }}
-      </a>
-    </mat-card-title>
-    <mat-card-subtitle>{{ business.address }}</mat-card-subtitle>
-    <mat-card-content>
-      {{ business.rating }}
-    </mat-card-content>
-    <mat-icon>favorite</mat-icon>
-    <mat-icon>favorite_border</mat-icon>
-  </mat-card>
+      <app-card  *ngFor="let business of businessList"  [class.selected]="business.bid === selectedId" [business]="business">
+      </app-card>
 </section>
 
 <router-outlet></router-outlet>

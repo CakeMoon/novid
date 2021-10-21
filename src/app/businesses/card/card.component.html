@@ -1,12 +1,13 @@
-<mat-card-title>
-  <a [routerLink]="[business.bid, 'detail']">
-    {{ business.name }}
-  </a>
-</mat-card-title>
-<mat-card-subtitle>{{ business.address }}</mat-card-subtitle>
-<mat-card-content>
-  {{ business.rating }}
-</mat-card-content>
-<mat-icon>favorite</mat-icon>
-<mat-icon>favorite_border</mat-icon>
+<mat-card>
+  <mat-card-title>
+    <a [routerLink]="[business.bid, 'detail']">
+      {{ business.name }}
+    </a>
+  </mat-card-title>
+  <mat-card-subtitle>{{ business.address }}</mat-card-subtitle>
+  <mat-card-content>
+    {{ business.rating }}
+  </mat-card-content>
+  <mat-icon *ngIf="isLoggedIn && isFavorite" (click)="deleteFavorite()">favorite</mat-icon>
+  <mat-icon *ngIf="isLoggedIn && !isFavorite"  (click)="addFavorite()">favorite_border</mat-icon>
 </mat-card>

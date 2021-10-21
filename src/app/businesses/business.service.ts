@@ -1,18 +1,29 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders  } from '@angular/common/http';
 import { Operation, Business } from './business';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TokenStorageService } from '../auth/token-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BusinessService {
   private baseUrl = 'http://localhost:3000/api';
+  private httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+  isLoggedIn = false;
   businessList$ = new BehaviorSubject([] as Business[]);
+  favoriteList$ = new BehaviorSubject([] as Business[]);
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tokenStorageService: TokenStorageService
+  ) {
+    this.isLoggedIn = !!this.tokenStorageService.getToken();
     this.getBusinessList();
+    this.getFavoriteList();
   }
 
   search(name: string) {
@@ -47,7 +58,7 @@ export class BusinessService {
       .subscribe(
         res => {
           console.log(res);
-          this.businessList$.next(res as Business[]);
+          this.favoriteList$.next(res as Business[]);
         },
         err => {
           console.log(err);
@@ -81,7 +92,7 @@ export class BusinessService {
     .subscribe(
       res => {
         console.log(res);
-        this.businessList$.next(res as Business[]);
+        this.favoriteList$.next(res as Business[]);
       },
       err => {
         console.log(err);
@@ -98,6 +109,7 @@ export class BusinessService {
   processData(data: any) {
     const acc = new Array<Business>();
     data ? data.forEach((data: any) => {
+
       const operations = [
         {
           label: 'delivery',
@@ -137,4 +149,38 @@ export class BusinessService {
     return acc;
   }
 
+  checkFavorite(bid: number): Observable<boolean> {
+    return this.http
+      .get([this.baseUrl, 'users', 'favorites', bid].join('/'))
+      .pipe(
+        map(data => data ? true : false)
+      );
+  }
+
+  addFavorite(bid: number) {
+    console.log(bid);
+    this.http.post([this.baseUrl, 'users', 'favorites', bid].join('/'), {}, this.httpOptions)
+    .subscribe(
+      data => {
+        this.getFavoriteList();
+        return data;
+      },
+      err => {
+        return err;
+      }
+    )
+  }
+
+  deleteFavorite(bid: number) {
+    console.log(bid);
+    this.http.delete([this.baseUrl, 'users', 'favorites', bid].join('/'), this.httpOptions).subscribe(
+      data => {
+        this.getFavoriteList();
+        return data;
+      },
+      err => {
+        return err;
+      }
+    );
+  }
 }

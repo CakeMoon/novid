@@ -83,7 +83,7 @@ router.get('/favorites',
  * @throws {503} - if any error finding the business in the user's favorites
  */
 router.get('/favorites/:businessId',
-    [v.ensureUserSignedIn],
+    [middleware.ensureUserSignedIn],
     async (req, res) => {
     try {
         const uid = req.uid;
@@ -111,10 +111,11 @@ router.get('/favorites/:businessId',
  */
 
 router.post('/favorites/:businessId',
-    [v.ensureUserSignedIn],
+    [middleware.ensureUserSignedIn],
     async (req, res) => {
     try {
         const uid = req.uid;
+        console.log(uid);
         const bid = req.params.businessId; 
 
         let business = await Favorites.findFavorite(uid, bid);
@@ -126,7 +127,10 @@ router.post('/favorites/:businessId',
         }
 
         // make sql query to add favorite
+        console.log(uid);
         business = await Favorites.addFavorite(uid, bid);
+        filterBusiness(business)
+        console.log(business);
         res.status(201).json(business).end();
 
     } catch (error) {
@@ -146,7 +150,7 @@ router.post('/favorites/:businessId',
 */
 
 router.delete('/favorites/:businessId',
-    [v.ensureUserSignedIn],
+    [middleware.ensureUserSignedIn],
     async (req, res) => {
         try {
             const uid = req.uid;
