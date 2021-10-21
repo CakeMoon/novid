@@ -28,7 +28,6 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { EditComponent } from './edit/edit.component';
 import { OwnerComponent } from './owner/owner.component';
 import { ReviewComponent } from './review/review.component';
-import { ContentComponent } from './content/content.component';
 import { CardComponent } from './card/card.component';
 import { RatingComponent } from './rating/rating.component';
 import { ReadOnlyRatingComponent } from './read-only-rating/read-only-rating.component';
@@ -43,7 +42,6 @@ import { ReviewCardComponent } from './review-card/review-card.component';
     EditComponent,
     OwnerComponent,
     ReviewComponent,
-    ContentComponent,
     CardComponent,
     RatingComponent,
     ReadOnlyRatingComponent,

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ReviewService } from '../review.service';
 import { Prompt } from '../prompt';
@@ -23,7 +24,8 @@ export class ReviewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private _snackBar: MatSnackBar,
   ) {
 
   }
@@ -46,8 +48,24 @@ export class ReviewComponent implements OnInit {
         ratingList.push({promptID: i, response: this.ratings[i-1]})
     }
     const body = { reviewText: this.text, ratings: ratingList, vcode: this.vcode}; 
-    console.log(body);
-    this.reviewService.postReview(body, this.business.bid);
+    this.reviewService.postReview(body, this.business.bid).subscribe(
+      data => {
+        this._snackBar.open(data.message, '', { duration: 1000 });
+        setTimeout(() => {
+          this.gotoDetail();
+        }, 1000);
+      },
+      err => {
+        console.log(err);
+        this._snackBar.open(err.error.message, 'Got it', { duration: 1000 });
+      }
+    );
+  }
+
+  gotoDetail() {
+    const businessId = this.business ? this.business.bid : null;
+    console.log(businessId);
+    this.router.navigate(['/business', businessId, 'detail']);
   }
 
   rate(score: number, index: number) {

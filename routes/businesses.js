@@ -28,7 +28,7 @@ router.get('/', [], async (req, res) => {
         filterBusinesses(allBusinesses);
         res.status(200).json(allBusinesses).end();
     } catch (error) {
-        res.status(503).json({ error: `Could not fetch all businesses: ${error}` }).end();
+        res.status(503).json({ message: `Could not fetch all businesses: ${error}` }).end();
     }
 });
 
@@ -45,7 +45,7 @@ router.get('/:businessId/owner', [], async (req, res) => {
     let business = await Businesses.getOneBusiness(bid);
     if (business == null) {
         res.status(404).json({
-            error: `The business does not exist.`,
+            message: `The business does not exist.`,
         }).end();
         return;
     }
@@ -68,25 +68,27 @@ router.post('/:businessId/owner', [middleware.ensureUserSignedIn], async (req, r
     let business = await Businesses.getOneBusiness(bid);
     if (business == null) {
         res.status(404).json({
-            error: `The business does not exist.`,
+            message: `The business does not exist.`,
         }).end();
         return;
     }
     if (business.authcode != req.body.authcode) {
         res.status(400).json({
-            error: `Incorrect authcode.`,
+            message: `Incorrect authcode.`,
         }).end();
         return;
     }
     let currentOwners = await Businesses.getBusinessOwners(bid);
     if (currentOwners.filter(obj => obj.uid === uid).length > 0) {
         res.status(400).json({
-            error: `You already owned the business.`,
+            message: `You already owned the business.`,
         }).end();
         return;
     }
     Businesses.addBusinessOwner(bid, uid);
-    res.status(200).send(`Successfully claimed the business.`).end();
+    res.status(200).json({
+        message: `Successfully claimed the business.`,
+    }).end();
 });
 
 /**
@@ -102,7 +104,7 @@ router.get('/:businessId/reviews', [], async (req, res) => {
     let business = await Businesses.getOneBusiness(bid);
     if (business == null) {
         res.status(404).json({
-            error: `The business does not exist.`,
+            message: `The business does not exist.`,
         }).end();
         return;
     }
@@ -110,7 +112,7 @@ router.get('/:businessId/reviews', [], async (req, res) => {
         const allReviews = await Reviews.getAllReviews(bid);
         res.status(200).json(allReviews).end();
     } catch (error) {
-        res.status(503).json({ error: `Could not fetch all reviews: ${error}` }).end();
+        res.status(503).json({ message: `Could not fetch all reviews: ${error}` }).end();
     }
 });
 
@@ -127,7 +129,7 @@ router.get('/:businessId/reviews/scores', [], async (req, res) => {
     let business = await Businesses.getOneBusiness(bid);
     if (business == null) {
         res.status(404).json({
-            error: `The business does not exist.`,
+            message: `The business does not exist.`,
         }).end();
         return;
     }
@@ -135,7 +137,7 @@ router.get('/:businessId/reviews/scores', [], async (req, res) => {
         const ratingBreakdown = await Reviews.getRatingBreakdown(bid);
         res.status(200).json(ratingBreakdown).end();
     } catch (error) {
-        res.status(503).json({ error: `Could not fetch the scores: ${error}` }).end();
+        res.status(503).json({ message: `Could not fetch the scores: ${error}` }).end();
     }
 });
 
@@ -152,7 +154,7 @@ router.get('/:businessId/reviews/scores', [], async (req, res) => {
         const prompts = await Reviews.getAllPrompts();
         res.status(200).json(prompts).end();
     } catch (error) {
-        res.status(503).json({ error: `Could not fetch the prompts: ${error}` }).end();
+        res.status(503).json({ message: `Could not fetch the prompts: ${error}` }).end();
     }
 });
 
@@ -172,7 +174,7 @@ router.post('/:businessId/reviews', [middleware.ensureUserSignedIn], async (req,
     let business = await Businesses.getOneBusiness(bid);
     if (business == null) {
         res.status(404).json({
-            error: `The business does not exist.`,
+            message: `The business does not exist.`,
         }).end();
         return;
     }
@@ -182,19 +184,19 @@ router.post('/:businessId/reviews', [middleware.ensureUserSignedIn], async (req,
     let month = reviewDate.getMonth() + 1; // getMonth returns months from 0-11
     let year = reviewDate.getFullYear();
     let dateStr = month + "/" + date + "/" + year;
-    // check if the user has posted the review today
-    let reviewsPostedToday = await Reviews.getReviewsByDate(bid, uid, dateStr);
-    if (reviewsPostedToday.length > 0) {
-        res.status(400).json({ error: `You may not post more than one review per business per day.`}).end();
-        return;
-    }
+    // // check if the user has posted the review today
+    // let reviewsPostedToday = await Reviews.getReviewsByDate(bid, uid, dateStr);
+    // if (reviewsPostedToday.length > 0) {
+    //     res.status(400).json({ error: `You may not post more than one review per business per day.`}).end();
+    //     return;
+    // }
     // proceed to record the review
     try {
         req.body.ratings.forEach(rating => assert(rating.promptID >= 0 && parseInt(rating.response) >= 1 && parseInt(rating.response) <= 5));
         Reviews.submitReview(bid, uid, req.body.reviewText, req.body.ratings, verified, dateStr);
-        res.status(200).send(`Your review has been processed.`).end();
+        res.status(200).json({ message: `Your review has been processed.`}).end();
     } catch {
-        res.status(400).json({ error: `The submitted review is malformed.` }).end();
+        res.status(400).json({ message: `The submitted review is malformed.` }).end();
     }
 });
 
@@ -212,15 +214,15 @@ router.post('/:businessId/vcode', [middleware.ensureUserSignedIn], async (req, r
     const business = await Businesses.getOneBusiness(bid);
     if (business == null) {
         res.status(404).json({
-            error: `The business does not exist.`,
+            message: `The business does not exist.`,
         }).end();
         return;
     }
     const verified = (req.body.vcode == business.vcode);
     if (verified) {
-        res.status(200).send(`You are verified!`).end();
+        res.status(200).json({ message: `You are verified!` }).end();
     } else {
-        res.status(400).json({ error: `Wrong vcode` }).end();
+        res.status(400).json({ message: `Wrong vcode` }).end();
     }
 });
 
@@ -236,12 +238,12 @@ router.post('/:businessId/vcode', [middleware.ensureUserSignedIn], async (req, r
 router.get('/search/', [], async (req, res) => {
     const businessName = req.query.name;
     if (businessName.length === 0) {
-    res.status(400).json({ error: "You must specify a non empty business name" }).end();
+    res.status(400).json({ message: "You must specify a non empty business name" }).end();
     return;
     }
     const businesses = await Businesses.getBusinessesByName(businessName);
     if (businesses.length === 0) {
-        res.status(404).json({ error: "Business you search doesn't exist" }).end();
+        res.status(404).json({ message: "Business you search doesn't exist" }).end();
         return;
     }
     filterBusinesses(businesses);
@@ -260,12 +262,12 @@ router.get('/search/', [], async (req, res) => {
 router.get('/:bid?', [], async (req, res) => {
     const businessId = req.params.bid;
     if (businessId.length === 0) {
-        res.status(400).json({ error: "You must specify a non empty business id" }).end();
+        res.status(400).json({ message: "You must specify a non empty business id" }).end();
         return;
     }
     let business = await Businesses.getOneBusiness(businessId);
     if (!business) {
-        res.status(404).json({ error: "Business doesn't exist" }).end();
+        res.status(404).json({ message: "Business doesn't exist" }).end();
         return;
     }
     if (req.uid) {
@@ -306,14 +308,14 @@ router.patch('/:bid', [middleware.ensureUserSignedIn], async (req, res) => {
     const business = await Businesses.getOneBusiness(bid);
     if (business == null) {
         res.status(404).json({
-            error: `The business does not exist.`,
+            message: `The business does not exist.`,
         }).end();
         return;
     }
     let businessOwners = (await Businesses.getBusinessOwners(bid)).map(entry => entry.uid);
     if (!businessOwners.includes(uid)) {
         res.status(403).json({
-            error: `You do not own the business.`,
+            message: `You do not own the business.`,
         }).end();
         return;
     }

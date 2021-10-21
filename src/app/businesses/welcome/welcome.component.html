@@ -23,8 +23,8 @@
           </figure>
       </div>
   </div>
-  <div class="buttons">
-    <button mat-flat-button color="primary">Register to post reviews</button>
-    <button mat-stroked-button>I already have an account</button>
+  <div class="buttons" *ngIf="!isLoggedIn">
+    <button mat-flat-button color="primary" (click)="gotoSignUp()">Register to post reviews</button>
+    <button mat-stroked-button  (click)="gotoSignIn()">I already have an account</button>
   </div>
 </div>

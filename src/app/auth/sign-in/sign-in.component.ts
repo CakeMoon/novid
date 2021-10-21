@@ -38,7 +38,7 @@ export class SignInComponent implements OnInit {
         this.reloadPage();
       },
       err => {
-        console.log(err.error.message);
+        console.log(err);
         this._snackBar.open(err.error.message, 'Got it');
       }
     );
