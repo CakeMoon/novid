@@ -10,6 +10,6 @@ export interface Business {
   operations: Operation[],
   vcode: number,
   authcode: number,
-  rating?: number,
+  rating: number,
   numReviews: number,
 }

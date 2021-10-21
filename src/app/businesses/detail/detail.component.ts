@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Business } from '../business';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-detail',
@@ -9,6 +10,7 @@ import { Business } from '../business';
 })
 export class DetailComponent implements OnInit {
   business!: Business;
+  prompList!: Observable<string[]>;
 
   constructor(
     private route: ActivatedRoute,
@@ -17,10 +19,12 @@ export class DetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.parent!.data
-    .subscribe(data => {
-      const business: Business = data.business;
-      this.business = business;
-    });
+      .subscribe(data => {
+        const business: Business = data.business;
+        this.business = business;
+      });
+
+    
   }
 
   gotoReview() {

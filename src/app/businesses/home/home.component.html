@@ -8,7 +8,7 @@
     <mat-label>Search for restaurants</mat-label>
     <input matInput placeholder="..." [formControl]="searchedName"/>
     <mat-hint>Enter a bookname and search</mat-hint>
-    <mat-icon matSuffix (click)="search()">search</mat-icon>
+    <mat-icon matSuffix (click)="onClick()">search</mat-icon>
   </mat-form-field>
 
       <app-card  *ngFor="let business of businessList"  [class.selected]="business.bid === selectedId" [business]="business">

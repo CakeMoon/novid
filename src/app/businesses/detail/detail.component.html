@@ -1,6 +1,17 @@
 <h1>{{ business.name }}</h1>
 <h2>{{ business.address }}</h2>
 
+<div class="score-overall">
+  <app-read-only-rating [rating]="business.rating" [starCount]="5"></app-read-only-rating>
+  {{ business.rating }}
+</div>
+<div class="score-list>">
+  <div class="score-prompt">
+    <app-read-only-rating [rating]="business.rating" [starCount]="5"></app-read-only-rating>
+    {{ business.rating }}
+  </div>
+</div>
+
 <div class="operations">
   <div class="operations-item" *ngFor="let operation of business.operations">
     <mat-icon *ngIf="operation.value === 0">clear</mat-icon>

@@ -42,7 +42,6 @@ export class HomeComponent implements OnInit {
           this.businessList = newList;
         })
       }
-      this.searchedName.setValue('', { emitEvent: false });
     })
 
     this.searchedName.valueChanges
@@ -51,24 +50,12 @@ export class HomeComponent implements OnInit {
       distinctUntilChanged(),
     )
     .subscribe(name => {
-      if (name.length !== 0) {
-        if (this.toggle.value === 'all') {
-          this.businessService.search(name);
-        }
-        if (this.toggle.value === 'favorite') {
-          this.businessService.searchFavorites(name);
-        }
-      }
-    })
+      this.businessService.searchedName$.next(name);
+    });
   }
 
-  search() {
-    const name = this.searchedName.value;
-    if (name.length === 0) {
-      this.businessService.getBusinessList();
-    } else {
-      this.businessService.search(name);
-    }
+  onClick() {
+    this.businessService.searchedName$.next(this.searchedName.value);
   }
 
   ngOnDestroy() {

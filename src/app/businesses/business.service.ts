@@ -3,7 +3,6 @@ import { HttpClient, HttpParams, HttpHeaders  } from '@angular/common/http';
 import { Operation, Business } from './business';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TokenStorageService } from '../auth/token-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +12,24 @@ export class BusinessService {
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
-  isLoggedIn = false;
   businessList$ = new BehaviorSubject([] as Business[]);
   favoriteList$ = new BehaviorSubject([] as Business[]);
+  searchedName$ = new BehaviorSubject('');
 
   constructor(
     private http: HttpClient,
-    private tokenStorageService: TokenStorageService
   ) {
-    this.isLoggedIn = !!this.tokenStorageService.getToken();
     this.getBusinessList();
     this.getFavoriteList();
+    this.searchedName$.subscribe(name => {
+      if (name === '') {
+        this.getBusinessList();
+        this.getFavoriteList();
+      } else {
+        this.search(name);
+        this.searchFavorites(name);
+      }
+    })
   }
 
   search(name: string) {
@@ -136,7 +142,7 @@ export class BusinessService {
         operations: operations,
         vcode: data.vcode,
         authcode: data.authcode,
-        rating: data.rating,
+        rating: data.rating ? data.rating : 0,
         numReviews: data.numReviews,
       } as Business;
 
@@ -162,7 +168,15 @@ export class BusinessService {
     this.http.post([this.baseUrl, 'users', 'favorites', bid].join('/'), {}, this.httpOptions)
     .subscribe(
       data => {
-        this.getFavoriteList();
+        this.searchedName$.subscribe(name => {
+          if (name === '') {
+            this.getBusinessList();
+            this.getFavoriteList();
+          } else {
+            this.search(name);
+            this.searchFavorites(name);
+          }
+        })
         return data;
       },
       err => {
@@ -175,7 +189,15 @@ export class BusinessService {
     console.log(bid);
     this.http.delete([this.baseUrl, 'users', 'favorites', bid].join('/'), this.httpOptions).subscribe(
       data => {
-        this.getFavoriteList();
+        this.searchedName$.subscribe(name => {
+          if (name === '') {
+            this.getBusinessList();
+            this.getFavoriteList();
+          } else {
+            this.search(name);
+            this.searchFavorites(name);
+          }
+        })
         return data;
       },
       err => {

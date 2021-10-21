@@ -30,6 +30,8 @@ import { OwnerComponent } from './owner/owner.component';
 import { ReviewComponent } from './review/review.component';
 import { ContentComponent } from './content/content.component';
 import { CardComponent } from './card/card.component';
+import { RatingComponent } from './rating/rating.component';
+import { ReadOnlyRatingComponent } from './read-only-rating/read-only-rating.component';
 
 
 @NgModule({
@@ -42,6 +44,8 @@ import { CardComponent } from './card/card.component';
     ReviewComponent,
     ContentComponent,
     CardComponent,
+    RatingComponent,
+    ReadOnlyRatingComponent,
   ],
   imports: [
     CommonModule,

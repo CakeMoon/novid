@@ -1,0 +1,5 @@
+<button >
+  <mat-icon mat-icon-button *ngFor="let i of ratingArr" (click)="onClick(i+1)" (mouseover)="onHover(i+1)">
+    {{ showIcon(i) }}
+  </mat-icon>
+</button>

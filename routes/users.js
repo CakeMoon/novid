@@ -66,10 +66,6 @@ router.get('/favorites',
         return;
     }
     const businesses = await Favorites.getFavoritesByName(uid, businessName);
-    if (businesses.length === 0) {
-        res.status(404).json({ error: "Business you search doesn't exist" }).end();
-        return;
-    }
     filterBusinesses(businesses);
     res.status(200).json(businesses).end();
 });

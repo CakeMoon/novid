@@ -6,6 +6,7 @@
   </mat-card-title>
   <mat-card-subtitle>{{ business.address }}</mat-card-subtitle>
   <mat-card-content>
+    <app-read-only-rating [rating]="business.rating" [starCount]="5"></app-read-only-rating>
     {{ business.rating }}
   </mat-card-content>
   <mat-icon *ngIf="isLoggedIn && isFavorite" (click)="deleteFavorite()">favorite</mat-icon>
