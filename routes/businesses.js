@@ -1,5 +1,5 @@
 const express = require('express');
-const v = require('./validators');
+const middleware = require('./middleware');
 const assert = require('assert');
 
 const Businesses = require('../models/Businesses');
@@ -62,8 +62,8 @@ router.get('/:businessId/owner', [], async (req, res) => {
  * @throws {404} - If the business does not exist
  * @throws {400} - If authcode is wrong or the user already owned the business
  */
-router.post('/:businessId/owner', [v.ensureUserSignedIn], async (req, res) => {
-    let uid = req.session.uid;
+router.post('/:businessId/owner', [middleware.ensureUserSignedIn], async (req, res) => {
+    let uid = req.uid;
     let bid = req.params.businessId;
     let business = await Businesses.getOneBusiness(bid);
     if (business == null) {
@@ -166,8 +166,8 @@ router.get('/:businessId/reviews/scores', [], async (req, res) => {
  * @returns {string} - Successfully reviewed message
  * @throws {404} - If the business does not exist
  */
-router.post('/:businessId/reviews', [v.ensureUserSignedIn], async (req, res) => {
-    let uid = req.session.uid;
+router.post('/:businessId/reviews', [middleware.ensureUserSignedIn], async (req, res) => {
+    let uid = req.uid;
     let bid = req.params.businessId;
     let business = await Businesses.getOneBusiness(bid);
     if (business == null) {
@@ -207,7 +207,7 @@ router.post('/:businessId/reviews', [v.ensureUserSignedIn], async (req, res) => 
  * @throws {404} - If the business does not exist
  * @throws {400} - If the vcode is wrong
  */
-router.post('/:businessId/vcode', [v.ensureUserSignedIn], async (req, res) => {
+router.post('/:businessId/vcode', [middleware.ensureUserSignedIn], async (req, res) => {
     const bid = req.params.businessId;
     const business = await Businesses.getOneBusiness(bid);
     if (business == null) {
@@ -268,10 +268,10 @@ router.get('/:bid?', [], async (req, res) => {
         res.status(404).json({ error: "Business doesn't exist" }).end();
         return;
     }
-    if (req.session.uid) {
+    if (req.uid) {
         // field `owned`
         const businessOwners = (await Businesses.getBusinessOwners(businessId)).map(entry => entry.uid);
-        business.owned = businessOwners.includes(req.session.uid);
+        business.owned = businessOwners.includes(req.uid);
 
         // field `eligibleToReview`
         let reviewDate = new Date();
@@ -279,7 +279,7 @@ router.get('/:bid?', [], async (req, res) => {
         let month = reviewDate.getMonth() + 1; // getMonth returns months from 0-11
         let year = reviewDate.getFullYear();
         let dateStr = month + "/" + date + "/" + year;
-        const reviewsPostedToday = (await Reviews.getReviewsByDate(businessId, req.session.uid, dateStr));
+        const reviewsPostedToday = (await Reviews.getReviewsByDate(businessId, req.uid, dateStr));
         business.eligibleToReview = reviewsPostedToday.length === 0;
     }
     filterBusiness(business);
@@ -300,8 +300,8 @@ router.get('/:bid?', [], async (req, res) => {
  * @throws {404} - If the business does not exist
  * @throws {403} - If the logged in user does not own the business
  */
-router.patch('/:bid', [v.ensureUserSignedIn], async (req, res) => {
-    const uid = req.session.uid;
+router.patch('/:bid', [middleware.ensureUserSignedIn], async (req, res) => {
+    const uid = req.uid;
     const bid = req.params.bid;
     const business = await Businesses.getOneBusiness(bid);
     if (business == null) {

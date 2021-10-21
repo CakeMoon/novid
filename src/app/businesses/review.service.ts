@@ -99,4 +99,16 @@ export class ReviewService {
       )
   }
 
+  postReview(review: any, bid: number) {
+    return this.http.post([this.baseUrl, 'businesses', bid, 'reviews'].join('/'), review, this.httpOptions).subscribe(        
+      res => {
+        console.log(res);
+        this.getPrompts(bid);
+        this.getReviews(bid);
+      },
+      err => {
+        console.log(err);
+      }
+    );;
+  }
 }

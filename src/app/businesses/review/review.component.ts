@@ -47,6 +47,7 @@ export class ReviewComponent implements OnInit {
     }
     const body = { reviewText: this.text, ratings: ratingList, vcode: this.vcode}; 
     console.log(body);
+    this.reviewService.postReview(body, this.business.bid);
   }
 
   rate(score: number, index: number) {
