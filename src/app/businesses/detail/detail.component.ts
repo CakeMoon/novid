@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Business } from '../business';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { ReviewService } from '../review.service';
+import { Prompt } from '../prompt';
+import { Review } from '../review';
 
 @Component({
   selector: 'app-detail',
@@ -10,11 +13,15 @@ import { Observable } from 'rxjs';
 })
 export class DetailComponent implements OnInit {
   business!: Business;
-  prompList!: Observable<string[]>;
+  promptList: Prompt[] = [];
+  reviewList: Review[] = [];
+  promptsSubscription!: Subscription;
+  reviewsSubscription!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private reviewService: ReviewService,
   ) { }
 
   ngOnInit(): void {
@@ -22,9 +29,17 @@ export class DetailComponent implements OnInit {
       .subscribe(data => {
         const business: Business = data.business;
         this.business = business;
+        this.reviewService.getPrompts(this.business.bid);
+        this.reviewService.getReviews(this.business.bid);
       });
 
-    
+    this.promptsSubscription = this.reviewService.prompts$.subscribe(newList => {
+      this.promptList = newList;
+    });
+
+    this.promptsSubscription = this.reviewService.reviews$.subscribe(newList => {
+      this.reviewList = newList;
+    });
   }
 
   gotoReview() {

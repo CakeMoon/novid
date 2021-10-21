@@ -26,7 +26,8 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.subscription = this.businessService.businessList$.subscribe(newList => {
       this.businessList = newList;
-    })
+    });
+  
 
     this.toggle.valueChanges
     .subscribe(toggle => {

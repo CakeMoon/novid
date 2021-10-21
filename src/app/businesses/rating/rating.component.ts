@@ -7,9 +7,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class RatingComponent implements OnInit {
   @Input() starCount: number = 5;
-  @Output() private event = new EventEmitter<number>();
+  @Output() private ratingUpdated = new EventEmitter<number>();
+  @Input() rating: number = 0;
 
-  rating: number = 0;
+  tempRating = 0;
   ratingArr: number[] = [];
 
   constructor() { }
@@ -21,13 +22,7 @@ export class RatingComponent implements OnInit {
   }
 
   onClick(rating: number) {
-    this.rating = rating;
-    this.event.emit(rating);
-
-  }
-
-  onHover(rating: number) {
-    this.rating = rating;
+    this.ratingUpdated.emit(rating);
   }
 
   showIcon(index: number) {

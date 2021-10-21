@@ -1,1 +1,29 @@
 <h1>Reviewing...</h1>
+
+<div class="score-list>">
+  <div class="score-prompt" *ngFor="let rating of ratings; index as i">
+    {{ prompts[i].promptTitle }}
+    <app-rating  [rating]="rating" [starCount]="5" (ratingUpdated)="rate($event, i)"></app-rating>
+  </div>
+</div>
+
+<mat-form-field appearance="fill">
+  <mat-label>Leave a comment</mat-label>
+  <textarea matInput type="text" [(ngModel)]="text"></textarea>
+  <button *ngIf="text" matSuffix mat-icon-button aria-label="Clear" (click)="text=''">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>
+
+<mat-form-field appearance="fill">
+  <mat-label>Enter your vcode</mat-label>
+  <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="vcode">
+  <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+  </button>
+
+</mat-form-field>
+<div>
+  <button mat-raised-button color="primary" (click)="submit()">Submit</button>
+  <button mat-raised-button>Cancel</button>
+</div>

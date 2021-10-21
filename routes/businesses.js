@@ -140,6 +140,23 @@ router.get('/:businessId/reviews/scores', [], async (req, res) => {
 });
 
 /**
+ * Get all prompts.
+ * 
+ * @name GET /api/businesses/:businessId/reviews/scores
+ * @param {number} businessId - id of the business
+ * @returns {Prompts} - prompts
+ * @throws {404} - If the business does not exist
+ */
+ router.get('/:businessId/reviews/prompts', [], async (req, res) => {
+    try {
+        const prompts = await Reviews.getAllPrompts();
+        res.status(200).json(prompts).end();
+    } catch (error) {
+        res.status(503).json({ error: `Could not fetch the prompts: ${error}` }).end();
+    }
+});
+
+/**
  * Submit a review.
  * 
  * @name POST /api/businesses/:businessId/reviews

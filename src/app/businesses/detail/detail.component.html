@@ -6,9 +6,10 @@
   {{ business.rating }}
 </div>
 <div class="score-list>">
-  <div class="score-prompt">
-    <app-read-only-rating [rating]="business.rating" [starCount]="5"></app-read-only-rating>
-    {{ business.rating }}
+  <div class="score-prompt" *ngFor="let prompt of promptList">
+    {{ prompt.promptTitle }}
+    <app-read-only-rating  [rating]="prompt.promptRating" [starCount]="5"></app-read-only-rating>
+    {{ prompt.promptRating }}
   </div>
 </div>
 
@@ -23,3 +24,5 @@
 <button mat-flat-button color="primary" (click)="gotoReview()">Leave Review</button>
 <button mat-flat-button color="primary" (click)="gotoEdit()">Edit Business</button>
 <button mat-button (click)="gotoClaim()">Are you the owner of this business?</button>
+
+<app-review-card  *ngFor="let review of reviewList; index as i" [review]="review"></app-review-card>

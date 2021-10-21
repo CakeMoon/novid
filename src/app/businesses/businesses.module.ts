@@ -32,6 +32,7 @@ import { ContentComponent } from './content/content.component';
 import { CardComponent } from './card/card.component';
 import { RatingComponent } from './rating/rating.component';
 import { ReadOnlyRatingComponent } from './read-only-rating/read-only-rating.component';
+import { ReviewCardComponent } from './review-card/review-card.component';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { ReadOnlyRatingComponent } from './read-only-rating/read-only-rating.com
     CardComponent,
     RatingComponent,
     ReadOnlyRatingComponent,
+    ReviewCardComponent,
   ],
   imports: [
     CommonModule,

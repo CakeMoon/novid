@@ -1,0 +1,17 @@
+<mat-card>
+  <mat-card-title>
+    {{ review.username}}
+  </mat-card-title>
+  <mat-card-subtitle>{{ review.reviewDate }}</mat-card-subtitle>
+  <mat-card-content>
+    <!-- <app-read-only-rating [rating]="review.rating" [starCount]="5"></app-read-only-rating> -->
+    <div class="score-list>">
+      <div class="score-prompt" *ngFor="let prompt of promptList$ | async">
+        {{ prompt.promptTitle }}
+        <app-read-only-rating  [rating]="prompt.promptRating" [starCount]="5"></app-read-only-rating>
+        {{ prompt.promptRating }}
+      </div>
+    </div>
+    {{ review.text }}
+  </mat-card-content>
+</mat-card>
