@@ -44,15 +44,34 @@ class Favorites {
     /**
      * Get all businesses in user's favorites
      * @param {number} uid - User ID of logged in user
-     * @return {Favorite[]} - return user's favorited businesses' bid, name, overall rating, and number of reviews
+     * @return {Businesses[]} - return user's favorited businesses' bid, name, overall rating, and number of reviews
      */
     static async findAllFavorites(uid) {
-        return db.all(`SELECT favorites.bid, name, address, rating, numReviews
-                        FROM favorites
-                        LEFT JOIN businesses ON favorites.bid = businesses.bid
-                        WHERE favorites.uid = ${uid}
-                        ORDER BY name;`);
+        return db.all(`SELECT *
+                        FROM businesses
+                        WHERE ${db.columnNames.businessID} IN (
+                            SELECT ${db.columnNames.businessID}
+                            FROM favorites
+                            WHERE ${db.columnNames.userID} = ${uid}
+                        )`);
     }
+
+    /**
+     * Find all favorited Businesses having the same name.
+     * 
+     * @param {string} name - name of Businesses to find
+     * @return {Business[]} - found Businesses
+     */
+         static async getFavoritesByName(uid, name) {
+            const pattern = "%" + name + "%";
+            return db.all(`SELECT *
+                            FROM businesses
+                            WHERE ${db.columnNames.businessID} IN (
+                                SELECT ${db.columnNames.businessID}
+                                FROM favorites
+                                WHERE ${db.columnNames.userID} = ${uid}
+                            ) AND ${db.columnNames.businessName} LIKE ?`, [pattern]);
+        }
 
 }
 

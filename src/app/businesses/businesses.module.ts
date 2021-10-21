@@ -21,6 +21,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { DetailComponent } from './detail/detail.component';
 import { WelcomeComponent } from './welcome/welcome.component';
@@ -28,6 +29,7 @@ import { EditComponent } from './edit/edit.component';
 import { OwnerComponent } from './owner/owner.component';
 import { ReviewComponent } from './review/review.component';
 import { ContentComponent } from './content/content.component';
+import { CardComponent } from './card/card.component';
 
 
 @NgModule({
@@ -39,6 +41,7 @@ import { ContentComponent } from './content/content.component';
     OwnerComponent,
     ReviewComponent,
     ContentComponent,
+    CardComponent,
   ],
   imports: [
     CommonModule,
@@ -60,6 +63,7 @@ import { ContentComponent } from './content/content.component';
     MatProgressSpinnerModule,
     MatListModule,
     MatCheckboxModule,
+    MatButtonToggleModule,
   ]
 })
 export class BusinessesModule { }

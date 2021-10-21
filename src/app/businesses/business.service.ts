@@ -9,50 +9,57 @@ import { map } from 'rxjs/operators';
 })
 export class BusinessService {
   private baseUrl = 'http://localhost:3000/api';
-  private businessList$ = new BehaviorSubject([] as Business[]);
+  businessList$ = new BehaviorSubject([] as Business[]);
 
   constructor(private http: HttpClient) {
+    this.getBusinessList();
+  }
+
+  search(name: string) {
+    const params = new HttpParams()
+      .set('name', name);
+
+    this.http
+      .get([this.baseUrl, 'businesses', 'search/'].join('/'), { params })
+      .pipe(
+        map(this.processData)
+      )
+      .subscribe(
+        res => {
+          console.log(res);
+          this.businessList$.next(res as Business[]);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  searchFavorites(name: string) {
+    const params = new HttpParams()
+      .set('name', name);
+
+    this.http
+      .get([this.baseUrl, 'users', 'favorites', 'search/'].join('/'), { params })
+      .pipe(
+        map(this.processData)
+      )
+      .subscribe(
+        res => {
+          console.log(res);
+          this.businessList$.next(res as Business[]);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  getBusinessList() {
     this.http
     .get([this.baseUrl, 'businesses'].join('/'))
     .pipe(
-      map((data: any) => {
-        const acc = new Array<Business>();
-        data? data.forEach((data: any) => {
-          const operations = [
-            {
-              label: 'delivery',
-              value: data.delivery,
-            } as Operation,
-            {
-              label: 'takeout',
-              value: data.takeout,
-            } as Operation,
-            {
-              label: 'outdoor',
-              value: data.outdoor,
-            } as Operation,
-            {
-              label: 'indoor',
-              value: data.indoor,
-            } as Operation,
-          ] as Operation[];
-          
-          const out = {
-            bid: data.bid,
-            name: data.name,
-            address: data.address,
-            operations: operations,
-            vcode: data.vcode,
-            authcode: data.authcode,
-            rating: data.rating,
-            numReviews: data.numReviews,
-          } as Business;
-          acc.push(out);
-        }) :
-        undefined
-        ;
-        return acc;
-      })
+      map(this.processData)
     )
     .subscribe(
       res => {
@@ -65,60 +72,69 @@ export class BusinessService {
     );
   }
 
-  getBusinessList() { return this.businessList$ };
-
-  search(name: string): Observable<Business[]> {
-    const params = new HttpParams()
-    .set('name', name);
-
-    return this.http
-    .get([this.baseUrl, 'businesses', 'search/'].join('/'), { params })
+  getFavoriteList() {
+    this.http
+    .get([this.baseUrl, 'users', 'favorites'].join('/'))
     .pipe(
-      map((data: any) => {
-        const acc = new Array<Business>();
-        data? data.forEach((data: any) => {
-          const operations = [
-            {
-              label: 'delivery',
-              value: data.delivery,
-            } as Operation,
-            {
-              label: 'takeout',
-              value: data.takeout,
-            } as Operation,
-            {
-              label: 'outdoor',
-              value: data.outdoor,
-            } as Operation,
-            {
-              label: 'indoor',
-              value: data.indoor,
-            } as Operation,
-          ] as Operation[];
-          
-          const out = {
-            bid: data.bid,
-            name: data.name,
-            address: data.address,
-            operations: operations,
-            vcode: data.vcode,
-            authcode: data.authcode,
-            rating: data.rating,
-            numReviews: data.numReviews,
-          } as Business;
-          acc.push(out);
-        }) :
-        undefined
-        ;
-        return acc;
-      })
+      map(this.processData)
     )
+    .subscribe(
+      res => {
+        console.log(res);
+        this.businessList$.next(res as Business[]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   getBusiness(id: number | string): Observable<Business> {
-    return this.getBusinessList().pipe(
+    return this.businessList$.pipe(
       map(business => business.find(business => business.bid === +id)!)
     );
   }
 
-} 
+  processData(data: any) {
+    const acc = new Array<Business>();
+    data ? data.forEach((data: any) => {
+      const operations = [
+        {
+          label: 'delivery',
+          value: data.delivery,
+        } as Operation,
+        {
+          label: 'takeout',
+          value: data.takeout,
+        } as Operation,
+        {
+          label: 'outdoor',
+          value: data.outdoor,
+        } as Operation,
+        {
+          label: 'indoor',
+          value: data.indoor,
+        } as Operation,
+      ] as Operation[];
+
+      const out = {
+        bid: data.bid,
+        name: data.name,
+        address: data.address,
+        operations: operations,
+        vcode: data.vcode,
+        authcode: data.authcode,
+        rating: data.rating,
+        numReviews: data.numReviews,
+      } as Business;
+
+      acc.push(out);
+
+    }) :
+      undefined
+      ;
+
+    return acc;
+  }
+
+}

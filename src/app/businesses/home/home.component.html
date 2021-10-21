@@ -1,4 +1,9 @@
 <section class="sidebar">
+  <mat-button-toggle-group [formControl]="toggle" appearance="legacy" aria-label="Font Style">
+    <mat-button-toggle value="all">All Businesses</mat-button-toggle>
+    <mat-button-toggle value="favorite">Favorites</mat-button-toggle>
+  </mat-button-toggle-group>
+
   <mat-form-field class="search" appearance="legacy">
     <mat-label>Search for restaurants</mat-label>
     <input matInput placeholder="..." [formControl]="searchedName"/>
@@ -6,7 +11,7 @@
     <mat-icon matSuffix (click)="search()">search</mat-icon>
   </mat-form-field>
 
-  <mat-card *ngFor="let business of businessList$ | async"  [class.selected]="business.bid === selectedId">
+  <mat-card *ngFor="let business of businessList"  [class.selected]="business.bid === selectedId">
     <mat-card-title>
       <a [routerLink]="[business.bid, 'detail']">
         {{ business.name }}
@@ -16,6 +21,8 @@
     <mat-card-content>
       {{ business.rating }}
     </mat-card-content>
+    <mat-icon>favorite</mat-icon>
+    <mat-icon>favorite_border</mat-icon>
   </mat-card>
 </section>
 

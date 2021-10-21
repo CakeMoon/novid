@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
 const config = require('./auth.config');
 
-verifyToken = (req, res, next) => {
+ensureUserSignedIn = (req, res, next) => {
   let token = req.headers['x-access-token'];
 
   if (!token) {
     res.status(403).json({
-      error: 'No token provided!'
+      message: 'No token provided!'
     }).end();
     return
   }
@@ -14,15 +14,51 @@ verifyToken = (req, res, next) => {
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
       res.status(401).json({
-        error: 'Unauthorized!'
+        message: 'Unauthorized!'
       }).end();
       return
     }
-    req.userId = decoded.id;
+    req.uid = decoded.id;
     next();
   });
 };
 
+ensureUserNotSignedIn = (req, res, next) => {
+  let token = req.headers['x-access-token'];
+
+  if (token) {
+    res.status(400).json({
+      message: "You are already signed in!"
+    }).end();
+    return
+  }
+
+  next();
+};
+
+const ensureValidUsernameInBody = function(req, res, next) {
+  if (!req.body.username) {
+      res.status(400).json({
+          message: "The username field must not be empty."
+      }).end();
+      return;
+  }
+  next();
+};
+
+const ensureValidPasswordInBody = function(req, res, next) {
+  if (!req.body.password) {
+      res.status(400).json({
+          message: "The password field must not be empty."
+      }).end();
+      return;
+  }
+  next();
+}
+
 module.exports = {
-  verifyToken,
+  ensureUserSignedIn,
+  ensureValidUsernameInBody,
+  ensureValidPasswordInBody,
+  ensureUserNotSignedIn
 }

@@ -1,14 +1,20 @@
 const express = require('express');
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 
-const Users = require('../models/Users');
 const Favorites = require('../models/Favorites');
 const Reviews = require('../models/Reviews');
 const v = require('./validators');
 const middleware = require('./middleware');
 
 const router = express.Router();
+
+const filterBusiness = (business) => {
+    delete business['vcode'];
+    delete business['authcode'];
+};
+
+const filterBusinesses = (businesses) => {
+    businesses.forEach(business => filterBusiness(business));
+};
 
 /**
  * Get all the favorites of a user
@@ -18,21 +24,21 @@ const router = express.Router();
  * @throws {503} - if any error with getting all favorited businesses by user
  */
 router.get('/favorites',
-    [middleware.verifyToken],
+    [middleware.ensureUserSignedIn],
     async (req, res) => {
         try {
-            const uid = req.session.uid;
+            const uid = req.uid;
 
             // make sql query to get all favorites by user
             favorites = await Favorites.findAllFavorites(uid);
 
-            if (favorites.length == 0) {
-                res.status(200).json({
-                    data: favorites,
-                    message: 'You have not favorited any businesses yet'
-                }).end();
-                return;
-            }
+            // if (favorites.length == 0) {
+            //     res.status(200).json({
+            //         data: favorites,
+            //         message: 'You have not favorited any businesses yet'
+            //     }).end();
+            //     return;
+            // }
 
             res.status(200).json(favorites).end();
 
@@ -42,37 +48,31 @@ router.get('/favorites',
 });
 
 /**
- * Add a new user (Sign up a new user)
- * @name POST/api/users
- * @param {string} username - Username
- * @param {string} password - Password
- * @returns {User} - Signed up user
- * @throws {400} - If the username already exists.
+ * List all favorite businesses which have the name matching the search
+ * 
+ * @name GET /api/users/favorites/search/?name=
+ * @param {string} name - name of businesses to search
+ * @returns {Business[]} - found businesses
+ * @throws {400} - If the name is empty
+ * @throws {404} - If the business does not exist
  */
-router.post('/', 
-    [
-        v.ensureValidPasswordInBody,
-        v.ensureValidUsernameInBody,
-        v.ensureUserNotSignedIn
-    ],
+ router.get('/favorites/search/', 
+    [middleware.ensureUserSignedIn], 
     async (req, res) => {
-    try {
-        const username = req.body.username;
-        const password = bcrypt.hashSync(req.body.password, 8);
-
-        let user = await Users.addUser(username, password);
-        delete user.password;
-        res.status(201).json({
-            user,
-            message: "Please sign in to continue."
-        }).end();
-    } catch (error) {
-        res.status(400).json({
-            message: "The username already exists. Please enter a different username."
-        }).end();
+    const uid = req.uid;
+    const businessName = req.query.name;
+    if (businessName.length === 0) {
+        res.status(400).json({ error: "You must specify a non empty business name" }).end();
+        return;
     }
+    const businesses = await Favorites.getFavoritesByName(uid, businessName);
+    if (businesses.length === 0) {
+        res.status(404).json({ error: "Business you search doesn't exist" }).end();
+        return;
     }
-);
+    filterBusinesses(businesses);
+    res.status(200).json(businesses).end();
+});
 
 /**
  * Get a specific favorite
@@ -86,7 +86,7 @@ router.get('/favorites/:businessId',
     [v.ensureUserSignedIn],
     async (req, res) => {
     try {
-        const uid = req.session.uid;
+        const uid = req.uid;
         const bid = req.params.businessId;
 
         let business = await Favorites.findFavorite(uid, bid);
@@ -114,7 +114,7 @@ router.post('/favorites/:businessId',
     [v.ensureUserSignedIn],
     async (req, res) => {
     try {
-        const uid = req.session.uid;
+        const uid = req.uid;
         const bid = req.params.businessId; 
 
         let business = await Favorites.findFavorite(uid, bid);
@@ -149,7 +149,7 @@ router.delete('/favorites/:businessId',
     [v.ensureUserSignedIn],
     async (req, res) => {
         try {
-            const uid = req.session.uid;
+            const uid = req.uid;
             const bid = req.params.businessId;
 
             let business = await Favorites.findFavorite(uid, bid);

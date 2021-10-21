@@ -33,7 +33,6 @@ export class SignInComponent implements OnInit {
     }
     this.authService.login(user).subscribe(
       data => {
-        console.log(data.data);
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data.data);
         this.reloadPage();

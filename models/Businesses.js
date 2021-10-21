@@ -38,7 +38,7 @@ class Businesses {
      * @return {Business[]} - found Businesses
      */
     static async getBusinessesByName(name) {
-        let pattern = "%" + name + "%";
+        const pattern = "%" + name + "%";
         return db.all(`SELECT * FROM businesses WHERE ${db.columnNames.businessName} LIKE ?`, [pattern]);
     }
 
