@@ -39,7 +39,7 @@ export class SignInComponent implements OnInit {
       },
       err => {
         console.log(err);
-        this._snackBar.open(err.error.message, 'Got it');
+        this._snackBar.open(err.error.message, 'Got it', { duration: 1000 });
       }
     );
     

@@ -1,3 +1,3 @@
 module.exports = {
-  secret: "novid-secret-key"
+  secret: "novid-secret-key",
 };

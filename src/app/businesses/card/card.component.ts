@@ -2,6 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Business } from '../business';
 import { TokenStorageService } from '../../auth/token-storage.service';
 import { BusinessService } from '../business.service';
+import { ReviewService } from '../review.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -19,6 +20,7 @@ export class CardComponent implements OnInit {
   constructor(
     private tokenStorageService: TokenStorageService,
     private businessService: BusinessService,
+    private reviewService: ReviewService,
     ) { 
     this.isLoggedIn = !!this.tokenStorageService.getToken();
   }
@@ -42,5 +44,11 @@ export class CardComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  onClick(bid: number) {
+    this.businessService.getBusiness(bid);
+    this.reviewService.getPrompts(bid);
+    this.reviewService.getReviews(bid);
   }
 }

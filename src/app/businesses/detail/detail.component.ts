@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Business } from '../business';
 import { Subscription } from 'rxjs';
 import { ReviewService } from '../review.service';
+import { BusinessService } from '../business.service';
 import { Prompt } from '../prompt';
 import { Review } from '../review';
 
@@ -17,29 +18,43 @@ export class DetailComponent implements OnInit {
   reviewList: Review[] = [];
   promptsSubscription!: Subscription;
   reviewsSubscription!: Subscription;
+  businessSubscription!: Subscription;
+  owned = false;
+  
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private reviewService: ReviewService,
+    private businessService: BusinessService,
   ) { }
 
   ngOnInit(): void {
-    this.route.parent!.data
-      .subscribe(data => {
-        const business: Business = data.business;
-        this.business = business;
-        this.reviewService.getPrompts(this.business.bid);
-        this.reviewService.getReviews(this.business.bid);
-      });
+    // // Resolve
+    // this.route.parent!.data
+    //   .subscribe(data => {
+    //     console.log(data);
+    //     const business: Business = data.business;
+    //     this.business = business;
+    //   });
 
+    this.businessSubscription = this.businessService.business$
+      .subscribe(newBusiness =>{
+        this.business = newBusiness;
+      });
+      
     this.promptsSubscription = this.reviewService.prompts$.subscribe(newList => {
       this.promptList = newList;
     });
 
+    console.log(this.business.bid);
+    this.reviewService.getPrompts(this.business.bid);
+
     this.promptsSubscription = this.reviewService.reviews$.subscribe(newList => {
       this.reviewList = newList;
     });
+
+    this.reviewService.getReviews(this.business.bid);
   }
 
   gotoReview() {

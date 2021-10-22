@@ -36,7 +36,7 @@ export class SignUpComponent implements OnInit {
       },
       err => {
         console.log(err.error.message);
-        this._snackBar.open(err.error.message, 'Got it');
+        this._snackBar.open(err.error.message, 'Got it', { duration: 1000 });
       }
     );
   }

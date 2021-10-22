@@ -18,10 +18,16 @@ const routes: Routes = [
 
       {
         path: ':id',
-        resolve: {
-          business: DetailResolverService
-        },
+        // resolve: {
+        //   business: DetailResolverService
+        // },
+        // runGuardsAndResolvers: "always",
         children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
           {
             path: 'detail',
             component: DetailComponent,

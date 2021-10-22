@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-title>
-    <a [routerLink]="[business.bid, 'detail']">
+    <a [routerLink]="[business.bid, 'detail']" (click)="onClick(business.bid)">
       {{ business.name }}
     </a>
   </mat-card-title>

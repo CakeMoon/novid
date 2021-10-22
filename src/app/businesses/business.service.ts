@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders  } from '@angular/common/http';
 import { Operation, Business } from './business';
+import { Info } from './info';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -15,6 +16,7 @@ export class BusinessService {
   businessList$ = new BehaviorSubject([] as Business[]);
   favoriteList$ = new BehaviorSubject([] as Business[]);
   searchedName$ = new BehaviorSubject('');
+  business$ = new BehaviorSubject({} as Business);
 
   constructor(
     private http: HttpClient,
@@ -106,10 +108,18 @@ export class BusinessService {
     );
   }
 
-  getBusiness(id: number | string): Observable<Business> {
+  getBusinessForResovler(id: number | string): Observable<Business> {
     return this.businessList$.pipe(
-      map(business => business.find(business => business.bid === +id)!)
+      map(businesses => businesses.find(business => business.bid === +id)!)
     );
+  }
+
+  getBusiness(id: number | string): void{
+    this.businessList$.pipe(
+      map(businesses => businesses.find(business => business.bid === +id)!)
+    ).subscribe(newBusiness => {
+      this.business$.next(newBusiness);
+    });
   }
 
   processData(data: any) {
@@ -140,8 +150,6 @@ export class BusinessService {
         name: data.name,
         address: data.address,
         operations: operations,
-        vcode: data.vcode,
-        authcode: data.authcode,
         rating: data.rating ? data.rating : 0,
         numReviews: data.numReviews,
       } as Business;
@@ -204,5 +212,12 @@ export class BusinessService {
         return err;
       }
     );
+  }
+
+  editBusinesses(info: Info, bid: number): Observable<any> {
+    return this.http.patch(
+      [this.baseUrl, 'businesses', bid].join('/'),
+      info, 
+      this.httpOptions);
   }
 }

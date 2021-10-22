@@ -1,4 +1,8 @@
 const sqlite3 = require('sqlite3');
+const bcrypt = require("bcryptjs");
+
+const encryptA = (a) => bcrypt.hashSync(a, 9);
+const encryptV = (v) => bcrypt.hashSync(v, 10);
 
 let sqlDb;
 
@@ -91,8 +95,8 @@ function createBusinessesTable() {
         ${columnNames.takeout} INTEGER,
         ${columnNames.outdoor} INTEGER,
         ${columnNames.indoor} INTEGER,
-        ${columnNames.vcode} INTEGER NOT NULL,
-        ${columnNames.authcode} INTEGER NOT NULL UNIQUE,
+        ${columnNames.vcode} TEXT NOT NULL,
+        ${columnNames.authcode} TEXT NOT NULL UNIQUE,
         ${columnNames.rating} REAL,
         ${columnNames.numReviews} INTEGER DEFAULT 0
     )`);
@@ -235,24 +239,25 @@ function all(sqlQuery, params) {
 async function initializeBusinesses() {
     return sqlDb.run(`INSERT INTO businesses(name, address, delivery, takeout, outdoor, indoor, vcode, authcode, rating)
                 VALUES
-                ("ABC Pizza House", "744 Massachusetts Ave", 1, 1, 0, 0, 6162, 31775, null),
-                ("Area Four", "500 Technology Square", 1, 1, 1, 1, 5344, 87900, null),
-                ("Boston Burger Company", "1105 Massachusetts Ave", 1, 1, 1, 0, 7765, 90123, null),
-                ("Bon Me", "201 Alewife Brooke Pkwy", 0, 1, 0, 0, 9091, 22876, null),
-                ("Bon Me", "1 Kendall Square", 0, 1, 1, 0, 8883, 12877, null),
-                ("Bon Me", "60 Binnery St", 1, 1, 1, 0, 1555, 24775, null),
-                ("Charlie's Kitchen", "10 Eliot St", 0, 0, 1, 1, 4766, 74661, null),
-                ("Dumpling House", "950 Massachusetts Ave", 1, 1, 0, 0, 3342, 10098, null),
-                ("Falafel Corner", "8 Eliot St", 1, 1, 0, 0, 6544, 29864, null),
-                ("IHOP", "16 Eliot St", 1, 1, 0, 1, 6078, 30992, null), 
-                ("Le's", "36 JFK St", 1, 1, 0, 1, 3341, 11467, null),
-                ("Nine Tastes", "50 JFK St", 1, 1, 0, 1, 3498, 22019, null),
-                ("Pagu", "310 Massachusetts Ave", 1, 1, 1, 1, 8700, 35462, null),
-                ("Tasty Burger", "40 JFK St", 1, 1, 0, 0, 1112, 12365, null),
-                ("Tatte", "318 Third St", 0, 1, 1, 0, 6099, 47596, null),
-                ("Tampopo", "1815 Massachusetts Ave", 1, 1, 0, 0, 7768, 46581, null);`,
+                ("ABC Pizza House", "744 Massachusetts Ave", 1, 1, 0, 0, '${encryptV('6162')}', '${encryptA('31775')}', null),
+                ("Area Four", "500 Technology Square", 1, 1, 1, 1, '${encryptV('5344')}', '${encryptA('87900')}', null),
+                ("Boston Burger Company", "1105 Massachusetts Ave", 1, 1, 1, 0, '${encryptV('7765')}', '${encryptA('90123')}', null),
+                ("Bon Me", "201 Alewife Brooke Pkwy", 0, 1, 0, 0, '${encryptV('9091')}', '${encryptA('22876')}', null),
+                ("Bon Me", "1 Kendall Square", 0, 1, 1, 0, '${encryptV('8883')}', '${encryptA('12877')}', null),
+                ("Bon Me", "60 Binnery St", 1, 1, 1, 0, '${encryptV('1555')}', '${encryptA('24775')}', null),
+                ("Charlie's Kitchen", "10 Eliot St", 0, 0, 1, 1, '${encryptV('4766')}', '${encryptA('74661')}', null),
+                ("Dumpling House", "950 Massachusetts Ave", 1, 1, 0, 0, '${encryptV('3342')}', '${encryptA('10098')}', null),
+                ("Falafel Corner", "8 Eliot St", 1, 1, 0, 0, '${encryptV('6544')}', '${encryptA('29864')}', null),
+                ("IHOP", "16 Eliot St", 1, 1, 0, 1, '${encryptV('6078')}', '${encryptA('30992')}', null), 
+                ("Le's", "36 JFK St", 1, 1, 0, 1, '${encryptV('3341')}', '${encryptA('11467')}', null),
+                ("Nine Tastes", "50 JFK St", 1, 1, 0, 1, '${encryptV('3498')}', '${encryptA('22019')}', null),
+                ("Pagu", "310 Massachusetts Ave", 1, 1, 1, 1, '${encryptV('8700')}', '${encryptA('35462')}', null),
+                ("Tasty Burger", "40 JFK St", 1, 1, 0, 0, '${encryptV('1112')}', '${encryptA('12365')}', null),
+                ("Tatte", "318 Third St", 0, 1, 1, 0, '${encryptV('6099')}', '${encryptA('47596')}', null),
+                ("Tampopo", "1815 Massachusetts Ave", 1, 1, 0, 0, '${encryptV('7768')}', '${encryptA('46581')}', null);`,
                 (err) => {
                   if (err) {
+                    console.log(err);
                     console.log("Warning: the businesses table might have been populated earlier.");
                   } else {
                     console.log("Populated businesses table successfully.");

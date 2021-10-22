@@ -8,8 +8,6 @@ export interface Business {
   name: string,
   address: string,
   operations: Operation[],
-  vcode: number,
-  authcode: number,
   rating: number,
   numReviews: number,
 }

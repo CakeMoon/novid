@@ -1,6 +1,7 @@
 const express = require('express');
 const middleware = require('./middleware');
 const assert = require('assert');
+const bcrypt = require("bcryptjs");
 
 const Businesses = require('../models/Businesses');
 const Reviews = require('../models/Reviews');
@@ -72,12 +73,19 @@ router.post('/:businessId/owner', [middleware.ensureUserSignedIn], async (req, r
         }).end();
         return;
     }
-    if (business.authcode != req.body.authcode) {
+
+    const passwordIsValid = bcrypt.compareSync(
+        req.body.authcode,
+        business.authcode
+    );
+
+    if (!passwordIsValid) {
         res.status(400).json({
             message: `Incorrect authcode.`,
         }).end();
         return;
     }
+
     let currentOwners = await Businesses.getBusinessOwners(bid);
     if (currentOwners.filter(obj => obj.uid === uid).length > 0) {
         res.status(400).json({
@@ -85,6 +93,7 @@ router.post('/:businessId/owner', [middleware.ensureUserSignedIn], async (req, r
         }).end();
         return;
     }
+
     Businesses.addBusinessOwner(bid, uid);
     res.status(200).json({
         message: `Successfully claimed the business.`,
@@ -178,7 +187,12 @@ router.post('/:businessId/reviews', [middleware.ensureUserSignedIn], async (req,
         }).end();
         return;
     }
-    let verified = (req.body.vcode == business.vcode);
+
+    const verified = bcrypt.compareSync(
+        req.body.vcode,
+        business.vcode
+    );
+
     let reviewDate = new Date();
     let date = reviewDate.getDate();
     let month = reviewDate.getMonth() + 1; // getMonth returns months from 0-11
@@ -218,7 +232,12 @@ router.post('/:businessId/vcode', [middleware.ensureUserSignedIn], async (req, r
         }).end();
         return;
     }
-    const verified = (req.body.vcode == business.vcode);
+
+    const verified = bcrypt.compareSync(
+        req.body.vcode,
+        business.vcode
+    );
+
     if (verified) {
         res.status(200).json({ message: `You are verified!` }).end();
     } else {
@@ -319,7 +338,9 @@ router.patch('/:bid', [middleware.ensureUserSignedIn], async (req, res) => {
         }).end();
         return;
     }
-    if (req.body.vcode != null) business.vcode = parseInt(req.body.vcode);
+    if (req.body.vcode) {
+        business.vcode = bcrypt.hashSync(parseInt(req.body.vcode));
+    }
     if (req.body.delivery != null) business.delivery = req.body.delivery;
     if (req.body.takeout != null) business.takeout = req.body.takeout;
     if (req.body.outdoor != null) business.outdoor = req.body.outdoor;

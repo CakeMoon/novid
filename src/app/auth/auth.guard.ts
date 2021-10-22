@@ -6,12 +6,17 @@ import {
   RouterStateSnapshot, 
   UrlTree } from '@angular/router';
 import { TokenStorageService } from './token-storage.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(private tokenStorageService: TokenStorageService, private router: Router) {}
+  constructor(
+    private tokenStorageService: TokenStorageService, 
+    private router: Router,
+    private _snackBar: MatSnackBar,
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -24,6 +29,8 @@ export class AuthGuard implements CanActivate {
     if (isLoggedIn) { return true; }
 
     // Redirect to the login page
+    this._snackBar.open('You must login first', 'Got it', { duration: 1000 });
     return this.router.parseUrl('/sign-in');
   }
+
 }

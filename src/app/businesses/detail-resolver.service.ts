@@ -19,7 +19,7 @@ export class DetailResolverService implements Resolve<Business> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Business> | Observable<never> {
     const id = route.paramMap.get('id')!;
 
-    return this.bs.getBusiness(id).pipe(
+    return this.bs.getBusinessForResovler(id).pipe(
       take(1),
       mergeMap(business => {
         if (business) {
