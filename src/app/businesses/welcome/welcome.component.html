@@ -23,7 +23,7 @@
           </figure>
       </div>
   </div>
-  <div class="buttons">
+  <div class="buttons" *ngIf="isLoggedIn">
     <button mat-raised-button color="primary">Register to post reviews</button>
     <button mat-raised-button>I already have an account</button>
   </div>

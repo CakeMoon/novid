@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../../auth/token-storage.service';
+import { AuthService } from '../..//auth/auth.service';
 
 @Component({
   selector: 'app-welcome',
@@ -17,9 +18,11 @@ export class WelcomeComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private authService: AuthService,
   ) {
-    this.isLoggedIn = !!this.tokenStorageService.getToken();
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
   }
 
   ngOnInit(): void {

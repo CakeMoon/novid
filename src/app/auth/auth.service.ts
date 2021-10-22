@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { User } from './user';
 import { environment } from "../../environments/environment";
+import { TokenStorageService } from './token-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,14 @@ export class AuthService {
   isLoggedIn$ = new BehaviorSubject(false);
   username$ = new BehaviorSubject('');
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private tokenStorageService: TokenStorageService,
+  ) { 
+    if (!!this.tokenStorageService.getToken()) {
+      this.isLoggedIn$.next(true);
+    }
+  }
 
   login(user: User): Observable<any> {
     return this.http.post(
