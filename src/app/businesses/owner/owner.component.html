@@ -1,12 +1,18 @@
-<h2>Claim Business</h2>
-<p>You will need an authcode to claim this business.</p>
-<mat-form-field class="example-form-field" appearance="fill">
-  <mat-label>Enter your authcode</mat-label>
-  <input [formControl]="authcode" matInput [type]="hide ? 'password' : 'text'">
-  <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-  </button>
-</mat-form-field>
+<h1>Claim Business</h1>
 
-<button mat-flat-button color="primary" (click)="submit()">submit</button>
-<button mat-stroked-button (click)="cancel()">Cancel</button>
+<div class="container">
+  <p>You will need an authcode to claim this business.</p>
+  <mat-form-field appearance="fill">
+    <mat-label>Enter your authcode</mat-label>
+    <input [formControl]="authcode" matInput [type]="hide ? 'password' : 'text'">
+    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+
+
+<div>
+  <button mat-raised-button color="primary" (click)="submit()">submit</button>
+  <button mat-raised-button (click)="cancel()">Cancel</button>
+</div>

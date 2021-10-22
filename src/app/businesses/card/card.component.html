@@ -1,14 +1,17 @@
-<mat-card>
-  <mat-card-title>
+
+  <div class="title">
     <a [routerLink]="[business.bid, 'detail']" (click)="onClick(business.bid)">
       {{ business.name }}
     </a>
-  </mat-card-title>
-  <mat-card-subtitle>{{ business.address }}</mat-card-subtitle>
-  <mat-card-content>
+    <mat-icon *ngIf="isLoggedIn && isFavorite" (click)="deleteFavorite()">favorite</mat-icon>
+    <mat-icon *ngIf="isLoggedIn && !isFavorite"  (click)="addFavorite()">favorite_border</mat-icon>
+  </div>
+  <div class="subtitle">
+    {{ business.address }}
+  </div>
+  <div class="rating">
     <app-read-only-rating [rating]="business.rating" [starCount]="5"></app-read-only-rating>
-    {{ business.rating }}
-  </mat-card-content>
-  <mat-icon *ngIf="isLoggedIn && isFavorite" (click)="deleteFavorite()">favorite</mat-icon>
-  <mat-icon *ngIf="isLoggedIn && !isFavorite"  (click)="addFavorite()">favorite_border</mat-icon>
-</mat-card>
+    <div class="rating-number">{{ business.rating.toFixed(1) }}</div>
+  </div>
+
+  <mat-divider></mat-divider>

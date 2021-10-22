@@ -16,6 +16,7 @@ export class EditComponent implements OnInit {
   business!: Business;
   form!: FormGroup;
   businessSubscription!: Subscription;
+  hide = true;
 
   constructor(
     private route: ActivatedRoute,

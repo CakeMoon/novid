@@ -19,7 +19,7 @@ export class ClaimGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
+    return this.checkCanClaim();
   }
   
   checkCanClaim(): boolean | UrlTree {

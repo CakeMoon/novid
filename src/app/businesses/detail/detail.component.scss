@@ -1,3 +1,51 @@
+:host {
+  height: 100%;
+  width: 100%;
+  margin: 2em;
+}
+
+h1 {
+  font-weight: bolder;
+  font-size: 2.5em;
+}
+
+h2 {
+  font-weight: normal;
+}
+
+.score-overall {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.rating-number {
+  margin-left: 0.5em;
+}
+
+.score-list {
+  height: fit-content;
+  width: fit-content;
+  margin-bottom: 1em;
+}
+
+.score-prompt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bolder;
+}
+
+.score-title {
+  color: #999999;
+}
+
+.prompt-rating {
+  margin-left: 1em;
+  font-size: 0.5em;
+  display: flex;
+}
+
 .operations {
   display: flex;
   flex-direction: row;
@@ -7,4 +55,15 @@
   display: flex;
   align-items: center;
   margin-right: 0.5em;
+  margin-bottom: 1em;
+}
+
+.mat-flat-button {
+  margin-right: 0.5em;
+  margin-bottom: 1.5em;
+}
+
+.mat-button {
+  margin-right: 0.5em;
+  margin-bottom: 1.5em;
 }

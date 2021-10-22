@@ -5,7 +5,10 @@
 
 .sidebar {
   height: 100%;
+  width: 30%;
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
 }
 
 .mat-list {
@@ -15,4 +18,20 @@
 
 .mat-list-item {
   width: 100%;
+  overflow: hidden;
 }
+
+.mat-button-toggle-group {
+  margin: 1em;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.mat-button-toggle {
+  flex: 1;
+}
+
+.mat-form-field {
+  margin: 1em;
+}
+

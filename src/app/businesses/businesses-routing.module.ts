@@ -9,6 +9,7 @@ import { EditComponent } from './edit/edit.component';
 import { OwnerComponent } from './owner/owner.component';
 import { DetailResolverService } from './detail-resolver.service';
 import { ClaimGuard } from '../auth/claim.guard';
+import { ReviewGuard } from '../auth/review.guard';
 
 import { AuthGuard } from '../auth/auth.guard';
 import { OwnerGuard } from '../auth/owner.guard';
@@ -37,7 +38,7 @@ const routes: Routes = [
           {
             path: 'review',
             component: ReviewComponent,
-            canActivate: [AuthGuard],
+            canActivate: [ReviewGuard],
           },
           {
             path: 'claim',

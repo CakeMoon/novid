@@ -1,4 +1,5 @@
 <section class="sidebar">
+  
   <mat-button-toggle-group [formControl]="toggle" appearance="legacy" aria-label="Font Style">
     <mat-button-toggle value="all">All Businesses</mat-button-toggle>
     <mat-button-toggle value="favorite">Favorites</mat-button-toggle>
@@ -11,8 +12,12 @@
     <mat-icon matSuffix (click)="onClick()">search</mat-icon>
   </mat-form-field>
 
-      <app-card  *ngFor="let business of businessList"  [class.selected]="business.bid === selectedId" [business]="business">
-      </app-card>
+  <mat-divider></mat-divider>
+
+  <mat-list>
+    <app-card  *ngFor="let business of businessList"  [class.selected]="business.bid === selectedId" [business]="business">
+    </app-card>
+  </mat-list>
 </section>
 
 <router-outlet></router-outlet>

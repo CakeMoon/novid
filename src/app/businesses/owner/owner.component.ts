@@ -59,9 +59,7 @@ export class OwnerComponent implements OnInit {
 
   cancel() {
     const businessId = this.business ? this.business.bid : null;
-    setTimeout(() => {
-      this.router.navigate(['/business', businessId, 'detail']);
-    }, 1000);
+    this.router.navigate(['/business', businessId, 'detail']);
   }
 
   gotoDetail() {

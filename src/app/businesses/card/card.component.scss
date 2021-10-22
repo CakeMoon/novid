@@ -1,3 +1,35 @@
-.mat-card {
-  margin: 1em;
+:host {
+  margin: 1.5em;
+}
+
+.title {
+  font-size: 1.3em;
+  margin-bottom: 0.3em;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+a {
+  text-decoration: none;
+}
+
+.subtitle {
+  color: #6d6d6d;
+  margin-bottom: 1em;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5em;
+  margin-bottom: 2em;
+}
+
+.rating-number {
+  margin-left: 0.5em;
+}
+
+mat-list {
+  height: 100%;
 }

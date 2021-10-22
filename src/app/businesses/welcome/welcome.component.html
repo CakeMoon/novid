@@ -1,4 +1,4 @@
-<div class="welcome-container">
+
   <h1>{{ title }}</h1>
   <h2>{{ headerText }}</h2>
   <p>{{ text }}</p>
@@ -23,8 +23,7 @@
           </figure>
       </div>
   </div>
-  <div class="buttons" *ngIf="!isLoggedIn">
-    <button mat-flat-button color="primary" (click)="gotoSignUp()">Register to post reviews</button>
-    <button mat-stroked-button  (click)="gotoSignIn()">I already have an account</button>
+  <div class="buttons">
+    <button mat-raised-button color="primary">Register to post reviews</button>
+    <button mat-raised-button>I already have an account</button>
   </div>
-</div>

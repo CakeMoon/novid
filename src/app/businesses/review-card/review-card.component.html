@@ -4,14 +4,12 @@
   </mat-card-title>
   <mat-card-subtitle>{{ review.reviewDate }}</mat-card-subtitle>
   <mat-card-content>
-    <!-- <app-read-only-rating [rating]="review.rating" [starCount]="5"></app-read-only-rating> -->
-    <div class="score-list>">
+    <div class="score-list">
       <div class="score-prompt" *ngFor="let prompt of promptList$ | async">
-        {{ prompt.promptTitle }}
-        <app-read-only-rating  [rating]="prompt.promptRating" [starCount]="5"></app-read-only-rating>
-        {{ prompt.promptRating }}
+        <span class="score-title">{{ prompt.promptTitle }}</span>
+        <app-read-only-rating class="prompt-rating" [rating]="prompt.promptRating" [starCount]="5"></app-read-only-rating>
       </div>
     </div>
-    {{ review.text }}
+    <p>{{ review.text }}</p>
   </mat-card-content>
 </mat-card>

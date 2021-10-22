@@ -22,6 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { DetailComponent } from './detail/detail.component';
 import { WelcomeComponent } from './welcome/welcome.component';
@@ -68,6 +69,7 @@ import { ReviewCardComponent } from './review-card/review-card.component';
     MatListModule,
     MatCheckboxModule,
     MatButtonToggleModule,
+    MatSidenavModule,
   ]
 })
 export class BusinessesModule { }
