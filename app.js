@@ -42,7 +42,7 @@ app.use(cookieParser());
 
 // server html+css+js frontend
 app.use(history());
-app.use(express.static(path.join(__dirname, isProduction ? 'dist' : 'public'))); // in Heroku we want dist but for dev we want public so we don't have to rebuild everytime we change something.
+app.use(express.static(path.join(__dirname, isProduction ? 'dist/novid' : 'public'))); // in Heroku we want dist but for dev we want public so we don't have to rebuild everytime we change something.
 
 
 // connect url hierarchies to our routers

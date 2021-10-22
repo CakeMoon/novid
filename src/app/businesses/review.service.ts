@@ -4,12 +4,13 @@ import { Prompt } from './prompt';
 import { Review } from './review';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
-  private baseUrl = 'http://localhost:3000/api';
+  private baseUrl = environment.baseUrl;
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
