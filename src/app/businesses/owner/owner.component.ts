@@ -4,6 +4,8 @@ import { Business } from '../business';
 import { AuthService } from '../../auth/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
+import { BusinessService } from '../business.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-owner',
@@ -13,22 +15,30 @@ import { FormControl } from '@angular/forms';
 export class OwnerComponent implements OnInit {
   hide = true;
   business!: Business;
-  authcode = new FormControl('');;
+  authcode = new FormControl('');
+  businessSubscription!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private _snackBar: MatSnackBar,
+    private businessService: BusinessService,
   ) {
   }
 
   ngOnInit(): void {
-    this.route.parent!.data
-    .subscribe(data => {
-      const business: Business = data.business;
-      this.business = business;
-    });
+    // // For resolver
+    // this.route.parent!.data
+    // .subscribe(data => {
+    //   const business: Business = data.business;
+    //   this.business = business;
+    // });
+    this.businessSubscription = this.businessService.business$
+      .subscribe(newBusiness =>{
+        this.business = newBusiness;
+      });
+
   }
 
   submit() {
@@ -36,24 +46,28 @@ export class OwnerComponent implements OnInit {
       data => {
         this._snackBar.open(data.message, '', { duration: 1000 });
         setTimeout(() => {
+          this.businessService.getBusiness(this.business.bid);
           this.gotoDetail();
         }, 1000);
       },
       err => {
         console.log(err);
-        this._snackBar.open(err.error.message, 'Got it');
+        this._snackBar.open(err.error.message, 'Got it', { duration: 1000 });
       }
     )
   }
 
   cancel() {
     const businessId = this.business ? this.business.bid : null;
-    this.router.navigate(['/business', businessId, 'detail']);
+    setTimeout(() => {
+      this.router.navigate(['/business', businessId, 'detail']);
+    }, 1000);
   }
 
   gotoDetail() {
     const businessId = this.business ? this.business.bid : null;
-    console.log(businessId);
-    this.router.navigate(['/business', businessId, 'detail']);
+    setTimeout(() => {
+      this.router.navigate(['/business', businessId, 'detail']);
+    }, 1000);
   }
 }

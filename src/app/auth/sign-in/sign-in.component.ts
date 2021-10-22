@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TokenStorageService } from '../token-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in',
@@ -17,6 +18,7 @@ export class SignInComponent implements OnInit {
     private authService: AuthService,
     private _snackBar: MatSnackBar,
     private tokenStorage: TokenStorageService,
+    private router: Router,
   ) {
     this.form = this.fb.group({
       username: '',
@@ -35,7 +37,12 @@ export class SignInComponent implements OnInit {
       data => {
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data.data);
-        this.reloadPage();
+        this.authService.isLoggedIn$.next(true);
+        this.authService.username$.next(user.username);
+        this._snackBar.open('Welcome!', '', { duration: 1000 });
+        setTimeout(() => {
+          this.router.navigate(['/business']);
+        }, 1000);
       },
       err => {
         console.log(err);

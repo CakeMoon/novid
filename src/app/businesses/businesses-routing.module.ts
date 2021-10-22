@@ -8,8 +8,10 @@ import { ReviewComponent } from './review/review.component';
 import { EditComponent } from './edit/edit.component';
 import { OwnerComponent } from './owner/owner.component';
 import { DetailResolverService } from './detail-resolver.service';
+import { ClaimGuard } from '../auth/claim.guard';
 
 import { AuthGuard } from '../auth/auth.guard';
+import { OwnerGuard } from '../auth/owner.guard';
 
 const routes: Routes = [
   { path: 'business',
@@ -40,12 +42,12 @@ const routes: Routes = [
           {
             path: 'claim',
             component: OwnerComponent,
-            canActivate: [AuthGuard],
+            canActivate: [ClaimGuard],
           },
           {
             path: 'edit',
             component: EditComponent,
-            canActivate: [AuthGuard],
+            canActivate: [OwnerGuard],
           },
         ]
       },

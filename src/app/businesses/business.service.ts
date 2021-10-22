@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Operation, Business } from './business';
 import { Info } from './info';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -76,36 +76,36 @@ export class BusinessService {
 
   getBusinessList() {
     this.http
-    .get([this.baseUrl, 'businesses'].join('/'))
-    .pipe(
-      map(this.processData)
-    )
-    .subscribe(
-      res => {
-        console.log(res);
-        this.businessList$.next(res as Business[]);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+      .get([this.baseUrl, 'businesses'].join('/'))
+      .pipe(
+        map(this.processData)
+      )
+      .subscribe(
+        res => {
+          console.log(res);
+          this.businessList$.next(res as Business[]);
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   getFavoriteList() {
     this.http
-    .get([this.baseUrl, 'users', 'favorites'].join('/'))
-    .pipe(
-      map(this.processData)
-    )
-    .subscribe(
-      res => {
-        console.log(res);
-        this.favoriteList$.next(res as Business[]);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+      .get([this.baseUrl, 'users', 'favorites'].join('/'))
+      .pipe(
+        map(this.processData)
+      )
+      .subscribe(
+        res => {
+          console.log(res);
+          this.favoriteList$.next(res as Business[]);
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   getBusinessForResovler(id: number | string): Observable<Business> {
@@ -114,12 +114,47 @@ export class BusinessService {
     );
   }
 
-  getBusiness(id: number | string): void{
-    this.businessList$.pipe(
-      map(businesses => businesses.find(business => business.bid === +id)!)
-    ).subscribe(newBusiness => {
-      this.business$.next(newBusiness);
-    });
+  getBusiness(id: number | string): void {
+    this.http.get(
+        [this.baseUrl, 'businesses', `${id}?`].join('/'),
+      )
+      .subscribe(
+        (res: any) => {
+          const operations = [
+            {
+              label: 'delivery',
+              value: res.delivery,
+            } as Operation,
+            {
+              label: 'takeout',
+              value: res.takeout,
+            } as Operation,
+            {
+              label: 'outdoor',
+              value: res.outdoor,
+            } as Operation,
+            {
+              label: 'indoor',
+              value: res.indoor,
+            } as Operation,
+          ] as Operation[];
+
+          const newBusiness = {
+            bid: res.bid,
+            name: res.name,
+            address: res.address,
+            operations: operations,
+            rating: res.rating ? res.rating : 0,
+            numReviews: res.numReviews,
+            owned: res.owned,
+            eligibleToReview: res.eligibleToReview
+          }
+          this.business$.next(newBusiness as Business);
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   processData(data: any) {
@@ -174,23 +209,23 @@ export class BusinessService {
   addFavorite(bid: number) {
     console.log(bid);
     this.http.post([this.baseUrl, 'users', 'favorites', bid].join('/'), {}, this.httpOptions)
-    .subscribe(
-      data => {
-        this.searchedName$.subscribe(name => {
-          if (name === '') {
-            this.getBusinessList();
-            this.getFavoriteList();
-          } else {
-            this.search(name);
-            this.searchFavorites(name);
-          }
-        })
-        return data;
-      },
-      err => {
-        return err;
-      }
-    )
+      .subscribe(
+        data => {
+          this.searchedName$.subscribe(name => {
+            if (name === '') {
+              this.getBusinessList();
+              this.getFavoriteList();
+            } else {
+              this.search(name);
+              this.searchFavorites(name);
+            }
+          })
+          return data;
+        },
+        err => {
+          return err;
+        }
+      )
   }
 
   deleteFavorite(bid: number) {
@@ -217,7 +252,7 @@ export class BusinessService {
   editBusinesses(info: Info, bid: number): Observable<any> {
     return this.http.patch(
       [this.baseUrl, 'businesses', bid].join('/'),
-      info, 
+      info,
       this.httpOptions);
   }
 }

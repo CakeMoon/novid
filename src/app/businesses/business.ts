@@ -10,4 +10,6 @@ export interface Business {
   operations: Operation[],
   rating: number,
   numReviews: number,
+  owned: boolean,
+  eligibleToReview: boolean,
 }

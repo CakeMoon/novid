@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { addUser } = require('../models/Users');
 const config = require('./auth.config');
 
 ensureUserSignedIn = (req, res, next) => {
@@ -21,6 +22,27 @@ ensureUserSignedIn = (req, res, next) => {
     req.uid = decoded.id;
     next();
   });
+};
+
+findUser = (req, res, next) => {
+  let token = req.headers['x-access-token'];
+
+  if (token) {
+    jwt.verify(token, config.secret, (err, decoded) => {
+      if (err) {
+        res.status(401).json({
+          message: 'Unauthorized!'
+        }).end();
+        return
+      }
+      req.uid = decoded.id;
+
+    });
+  } else {
+    req.uid = null;
+  }
+
+  next();
 };
 
 ensureUserNotSignedIn = (req, res, next) => {
@@ -60,5 +82,6 @@ module.exports = {
   ensureUserSignedIn,
   ensureValidUsernameInBody,
   ensureValidPasswordInBody,
-  ensureUserNotSignedIn
+  ensureUserNotSignedIn,
+  findUser,
 }

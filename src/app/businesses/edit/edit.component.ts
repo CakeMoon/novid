@@ -49,6 +49,8 @@ export class EditComponent implements OnInit {
         this.business = newBusiness;
       });
 
+    console.log(this.business);
+
     const operations = this.business.operations.reduce((acc, curr) => {
       console.log(acc);
       return {...acc, [curr.label]: curr.value === 1}
@@ -104,7 +106,7 @@ export class EditComponent implements OnInit {
       },
       err => {
         console.log(err);
-        this._snackBar.open(err.error.message, 'Got it');
+        this._snackBar.open(err.error.message, 'Got it', { duration: 1000 });
       }
     )
   }

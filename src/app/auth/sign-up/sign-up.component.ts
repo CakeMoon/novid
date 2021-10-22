@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -15,6 +16,7 @@ export class SignUpComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private _snackBar: MatSnackBar,
+    private router: Router,
   ) {
     this.form = this.fb.group({
       username: '',
@@ -32,7 +34,10 @@ export class SignUpComponent implements OnInit {
     }
     this.authService.register(user).subscribe(
       data => {
-        console.log(data);
+        this._snackBar.open('Thanks for sign up', '', { duration: 1000 });
+        setTimeout(() => {
+          this.router.navigate(['/sign-in']);
+        }, 1000);
       },
       err => {
         console.log(err.error.message);

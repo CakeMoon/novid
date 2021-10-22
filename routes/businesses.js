@@ -278,7 +278,7 @@ router.get('/search/', [], async (req, res) => {
  * @throws {404} - If the business does not exist
  * @throws {400} - If the bid is empty
  */
-router.get('/:bid?', [], async (req, res) => {
+router.get('/:bid?', [middleware.findUser], async (req, res) => {
     const businessId = req.params.bid;
     if (businessId.length === 0) {
         res.status(400).json({ message: "You must specify a non empty business id" }).end();
@@ -289,6 +289,8 @@ router.get('/:bid?', [], async (req, res) => {
         res.status(404).json({ message: "Business doesn't exist" }).end();
         return;
     }
+    business.owned = false;
+    business.eligibleToReview = false;
     if (req.uid) {
         // field `owned`
         const businessOwners = (await Businesses.getBusinessOwners(businessId)).map(entry => entry.uid);
@@ -347,7 +349,7 @@ router.patch('/:bid', [middleware.ensureUserSignedIn], async (req, res) => {
     if (req.body.indoor != null) business.indoor = req.body.indoor;
     await Businesses.modifyBusiness(bid, business);
     filterBusiness(business);
-    res.status(200).json(business).end();
+    res.status(200).json({ message: 'Information updated successfully!'}).end();
 });
 
 module.exports = router;
