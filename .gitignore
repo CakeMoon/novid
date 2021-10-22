@@ -46,3 +46,7 @@ Thumbs.db
 
 # database
 noviddb.db
+
+# production
+/production
+/production.zip
